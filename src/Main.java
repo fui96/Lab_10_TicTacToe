@@ -1,89 +1,65 @@
 import java.util.Scanner;
 
 
-public class Main{
+public class Main {
     //Constants
     private static final int ROWS = 3;
     private static final int COLS = 3;
-    private static String board [][] = new String[ROWS][COLS];
+    private static String board[][] = new String[ROWS][COLS];
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         Boolean Cont = true;
         Boolean PlayerX = true;
-        do{
+        //Main Game Loop
+        do {
             ClearBoard();
             int moveCount = 0;
             Boolean GameIsWon = false;
             PlayerX = true;
-            do{
-                /*
-                if(PlayerX){
-                    int row = 0;
-                    int col = 0;
-                    Boolean ValidMove = false;
-                    while(!ValidMove){
-                        row = (SafeInput.getRangedInt(in,"Please select the row you would like",1,3) - 1);
-                        col = (SafeInput.getRangedInt(in,"Please select the column you would like",1,3) -1);
-                        ValidMove = isValidMove(row,col);
+            do {
+                DisplayBoard();
+                if (PlayerX) {
+                    System.out.println("Player X it is your turn please select your move");
+                } else {
+                    System.out.println("Player O it is your turn please select your move");
+                }
+                int row = 0;
+                int col = 0;
+                Boolean ValidMove = false;
+                while (!ValidMove) {
+                    row = (SafeInput.getRangedInt(in, "Please select the row you would like", 1, 3) - 1);
+                    col = (SafeInput.getRangedInt(in, "Please select the column you would like", 1, 3) - 1);
+                    ValidMove = isValidMove(row, col);
+                    if (!ValidMove) {
+                        System.out.println("Invalid Move");
                     }
+                }
+                if (PlayerX) {
                     board[row][col] = "X";
                     moveCount++;
-                    PlayerX = false;
-                    DisplayBoard();
-
-                }
-                else{
-                    int row = 0;
-                    int col = 0;
-                    Boolean ValidMove = false;
-                    while(!ValidMove){
-                        row = (SafeInput.getRangedInt(in,"Please select the row you would like",1,3) - 1);
-                        col = (SafeInput.getRangedInt(in,"Please select the column you would like",1,3) -1);
-                        ValidMove = isValidMove(row,col);
-                    }
+                } else {
                     board[row][col] = "O";
                     moveCount++;
-                    PlayerX = true;
+                }
+
+                if (moveCount >= 5) {
+                    if (PlayerX) {
+                        GameIsWon = isWin("X");
+                    } else {
+                        GameIsWon = isWin("O");
+                    }
+
+                }
+                if (GameIsWon) {
                     DisplayBoard();
+                    System.out.println("Congratulations Player!" + (PlayerX ? "X" : "O") + " You won!");
                 }
-                */
-                 int row = 0;
-                 int col = 0;
-                 Boolean ValidMove = false;
-                 while(!ValidMove){
-                     row = (SafeInput.getRangedInt(in,"Please select the row you would like",1,3) - 1);
-                     col = (SafeInput.getRangedInt(in,"Please select the column you would like",1,3) - 1);
-                     ValidMove = isValidMove(row, col);
-                     if(!ValidMove){
-                         System.out.println("Invalid Move");
-                     }
-                 }
-                 if(PlayerX){
-                     board[row][col] = "X";
-                     moveCount++;
-                 }
-                 else{
-                     board[row][col] = "O";
-                     moveCount++;
-                 }
-                 DisplayBoard();
-                 PlayerX = !PlayerX;
-
-                if(moveCount >= 5){
-
-                }
-
-            }while(!GameIsWon && moveCount < 9);
-
-
-
-
-
-
+                PlayerX = !PlayerX;
+            } while (!GameIsWon && moveCount < 9);
 
             SafeInput.getYNConfirm(in, "Would you like to play again? (Y/N)");
-        }while(Cont);
+        } while (Cont);
 
 
     }
@@ -98,47 +74,65 @@ public class Main{
             }
         }
     }
+
     //Show the board
     private static void DisplayBoard() {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
-                System.out.print( " | "+ board[i][j]);
-                if(j == 2){
-                    System.out.println();
-                }
+                System.out.print(board[i][j] + "|");
             }
+            System.out.println();
         }
     }
 
     //Valid Move Check
     private static Boolean isValidMove(int row, int col) {
         Boolean RetBool = false;
-        if(board[row][col].equals(" ")){
+        if (board[row][col].equals(" ")) {
             RetBool = true;
         }
         return RetBool;
     }
-    /*
+
     //Win Check
-    private static Boolean isWin(String Player){
-
+    private static Boolean isWin(String Player) {
+        return isRowWin(Player) || isColWin(Player) || isDiagonalWin(Player);
     }
+
     //Column Check
-    private static Boolean isColWin(String Player){
-
+    private static Boolean isColWin(String Player) {
+        for (int i = 0; i < ROWS; i++) {
+            if (board[i][0].equals(Player) && board[i][1].equals(Player) && board[i][2].equals(Player)) {
+                return true;
+            }
+        }
+        return false;
     }
+
     //Row Check
-    private static Boolean isRowWin(String Player){
-
+    private static Boolean isRowWin(String Player) {
+        for (int i = 0; i < COLS; i++) {
+            if (board[0][i].equals(Player) && board[1][i].equals(Player) && board[2][i].equals(Player)) {
+                return true;
+            }
+        }
+        return false;
     }
+
     //Diagonal Check
-    private static Boolean isDiagonalWin(String Player){
-
+    private static Boolean isDiagonalWin(String Player) {
+        if (board[0][0].equals(Player) && board[1][1].equals(Player) && board[2][2].equals(Player)) {
+            return true;
+        } else if (board[0][2].equals(Player) && board[1][1].equals(Player) && board[2][0].equals(Player)) {
+            return true;
+        }
+        return false;
     }
+
     //Check for tie
-    private static Boolean isTie(){
-
+    private static Boolean isTie() {
+        return null;
     }
-*/
+
 }
 
