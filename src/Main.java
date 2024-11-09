@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Main {
@@ -51,10 +53,6 @@ public class Main {
                     }
 
                 }
-                if (GameIsWon) {
-                    DisplayBoard();
-                    System.out.println("Congratulations Player!" + (PlayerX ? "X" : "O") + " You won!");
-                }
                 PlayerX = !PlayerX;
             } while (!GameIsWon && moveCount < 9);
 
@@ -96,10 +94,19 @@ public class Main {
 
     //Win Check
     private static Boolean isWin(String Player) {
-        return isRowWin(Player) || isColWin(Player) || isDiagonalWin(Player);
+        if(isRowWin(Player) || isColWin(Player) || isDiagonalWin(Player)) {
+            DisplayBoard();
+            System.out.println("Congratulations! Player "+ Player +" you won!");
+        }
+        else if(isTie()){
+            DisplayBoard();
+            System.out.println("The game is a Tie!");
+        }
+        return isRowWin(Player) || isColWin(Player) || isDiagonalWin(Player) || isTie();
     }
 
     //Column Check
+
     private static Boolean isColWin(String Player) {
         for (int i = 0; i < ROWS; i++) {
             if (board[i][0].equals(Player) && board[i][1].equals(Player) && board[i][2].equals(Player)) {
@@ -121,9 +128,9 @@ public class Main {
 
     //Diagonal Check
     private static Boolean isDiagonalWin(String Player) {
-        if (board[0][0].equals(Player) && board[1][1].equals(Player) && board[2][2].equals(Player)) {
+        if(board[0][0].equals(Player) && board[1][1].equals(Player) && board[2][2].equals(Player)) {
             return true;
-        } else if (board[0][2].equals(Player) && board[1][1].equals(Player) && board[2][0].equals(Player)) {
+        } else if(board[0][2].equals(Player) && board[1][1].equals(Player) && board[2][0].equals(Player)) {
             return true;
         }
         return false;
@@ -131,7 +138,28 @@ public class Main {
 
     //Check for tie
     private static Boolean isTie() {
-        return null;
+        Pattern pattern = Pattern.compile(".*X.*O.*|.*O.*X.*");
+
+        for (int i = 0; i < ROWS; i++) {
+
+            // Row Check
+            String row = board[i][0] + board[i][1] + board[i][2];
+            if (!pattern.matcher(row).find()) {
+                return false;
+            }
+            //Column Check
+            String col  = board[0][i] + board[1][i] + board[2][i];
+            if (!pattern.matcher(col).find()) {
+                return false;
+            }
+        }
+        //Diagonal Check
+        String Diagonal1 =  board[0][0] + board[1][1] + board[2][2];
+        String Diagonal2 =  board[0][2] + board[1][1] + board[2][0];
+        if (!pattern.matcher(Diagonal1).find() || !pattern.matcher(Diagonal2).find()) {
+            return false;
+        }
+        return true;
     }
 
 }
